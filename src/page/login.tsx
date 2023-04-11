@@ -54,19 +54,19 @@ export default function Login() {
       <CssBaseline />
       <Box
         sx={{
-          marginTop: 8,
+          marginTop: 20,
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
         }}
       >
-        <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+        <Avatar sx={{ m: 1, bgcolor: "info.main" }}>
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
           로그인
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 6 }}>
           <TextField
             margin="normal"
             required
@@ -98,7 +98,7 @@ export default function Login() {
           >
             로그인
           </Button>
-          <Grid container>
+          <Grid container justifyContent="center">
             <Grid item>
               <Link href="/signup" variant="body2">
                 {"계정이 없다면 회원가입하기"}
