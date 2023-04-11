@@ -1,4 +1,4 @@
-import { createBrowserRouter, RouteObject, Navigate } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Login from "./page/login";
 import Signup from "./page/signup";
 // import Todo from "./page/todo";
@@ -43,13 +43,12 @@ const routers = createBrowserRouter(
   routerData.map((router) => {
     const hasAccessToken = !!getAccessTokenFromLocalStorage();
     const isProtectedRoute = !!router.withAuth;
-    const isAuthPage = !!(router.path === "/login" || router.path === "/signup");
 
     if (isProtectedRoute) {
       return {
         path: router.path,
-        element: hasAccessToken ? router.element : <Navigate to={isAuthPage ? "/" : "/login"} />,
-      } as RouteObject;
+        element: <Navigate to={hasAccessToken ? "/todo" : "/login"} />,
+      };
     }
 
     return {
@@ -60,7 +59,7 @@ const routers = createBrowserRouter(
         ) : (
           router.element
         ),
-    } as RouteObject;
+    };
   })
 );
 
