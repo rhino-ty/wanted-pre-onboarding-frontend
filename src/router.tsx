@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
 import Login from "./page/login";
 import Signup from "./page/signup";
 import Todo from "./page/todo";
@@ -10,7 +10,6 @@ interface RouterElement {
   label: string; // 사이드바에 표시할 페이지 이름
   element: React.ReactNode; // 페이지 엘리먼트
   withAuth?: boolean; // 인증이 필요한 페이지 여부
-  redirectPath?: string;
 }
 
 const routerData: RouterElement[] = [
@@ -20,7 +19,6 @@ const routerData: RouterElement[] = [
     label: "Login",
     element: <Login />,
     withAuth: false,
-    redirectPath: "/todo",
   },
   {
     id: 1,
@@ -28,7 +26,6 @@ const routerData: RouterElement[] = [
     label: "Signup",
     element: <Signup />,
     withAuth: false,
-    redirectPath: "/todo",
   },
   {
     id: 2,
@@ -42,19 +39,19 @@ const routerData: RouterElement[] = [
 const routers = createBrowserRouter(
   routerData.map((router) => {
     const hasAccessToken = !!getAccessTokenFromLocalStorage();
-    const isProtectedRoute = !!router.withAuth;
+    const isProtectedRoute = router.withAuth;
 
-    if (isProtectedRoute && !hasAccessToken) {
+    if (hasAccessToken && (router.path === "/login" || router.path === "/signup")) {
       return {
         path: router.path,
-        element: <Navigate to={"/login"} />,
+        element: <Navigate to={"/todo"} replace />,
       };
     }
 
-    if (hasAccessToken && !isProtectedRoute) {
+    if (!hasAccessToken && router.path === "/todo" && isProtectedRoute) {
       return {
         path: router.path,
-        element: <Navigate to={"/todo"} />,
+        element: <Navigate to={"/login"} replace />,
       };
     }
 

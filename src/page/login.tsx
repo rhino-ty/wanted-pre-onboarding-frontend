@@ -1,8 +1,7 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { postLogin } from "../api/auth/loginApi";
 import { useRouter } from "../hooks/useRouter";
 import { getAccessTokenFromLocalStorage } from "../utils/accessTokenHandler";
-// import { saveAccessTokenToLocalStorage } from "@/src/utils/accessTokenHandler";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -17,23 +16,12 @@ import Container from "@mui/material/Container";
 export default function Login() {
   const { routeTo } = useRouter();
 
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-
-  const isLoggedIn = async (): Promise<boolean> => {
-    const userProfileResponse = getAccessTokenFromLocalStorage();
-    return userProfileResponse !== null;
-  };
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const isAccessTokenFetched = useRef(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const isUserLoggedIn: boolean = await isLoggedIn();
-
-    if (isUserLoggedIn) {
-      routeTo("/todo");
-      return;
-    }
 
     const loginResult = await postLogin({
       email: email,
@@ -43,23 +31,25 @@ export default function Login() {
     if (loginResult === "fail") {
       alert("로그인 실패, 이메일과 비밀번호를 다시 입력해주세요.");
       return;
+    } else if (loginResult === "success") {
+      isAccessTokenFetched.current = true;
+      routeTo("/todo");
+      window.location.reload();
     }
-    routeTo("/todo");
   };
+
+  useEffect(() => {
+    if (isAccessTokenFetched.current) routeTo("/todo");
+
+    return;
+  }, [routeTo]);
 
   const isButtonDisabled = !email.includes("@") || !email.includes(".") || password.length < 8;
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <Box
-        sx={{
-          marginTop: 20,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-        }}
-      >
+      <Box sx={{ marginTop: 20, display: "flex", flexDirection: "column", alignItems: "center" }}>
         <Avatar sx={{ m: 1, bgcolor: "info.main" }}>
           <LockOutlinedIcon />
         </Avatar>
