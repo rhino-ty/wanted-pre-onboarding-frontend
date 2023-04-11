@@ -8,12 +8,9 @@ export interface signUpRequest {
 type signUpResult = "success" | "fail";
 
 export const postSignUp = async (args: signUpRequest): Promise<signUpResult> => {
-  const signUpRes = await instance.post(`/auth/signup`, {
-    body: args,
-  });
-  const { data: signUpResponseData } = signUpRes;
+  const signUpRes = await instance.post(`/auth/signup`, args);
 
-  if (signUpResponseData.ok) {
+  if (signUpRes.status === 201) {
     return "success";
   }
 
