@@ -1,6 +1,21 @@
 import instance from "../axiosModul";
 
-export const postSignUp = async (email: string, password: string) => {
-  const response = await instance.post("/auth/signup", { email, password });
-  return response.data;
+export interface signUpRequest {
+  email: string;
+  password: string;
+}
+
+type signUpResult = "success" | "fail";
+
+export const postSignUp = async (args: signUpRequest): Promise<signUpResult> => {
+  const signUpRes = await instance.post(`/auth/signup`, {
+    body: args,
+  });
+  const { data: signUpResponseData } = signUpRes;
+
+  if (signUpResponseData.ok) {
+    return "success";
+  }
+
+  return "fail";
 };
