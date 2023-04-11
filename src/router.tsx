@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Login from "./page/login";
 import Signup from "./page/signup";
-// import Todo from "./page/todo";
+import Todo from "./page/todo";
 import { getAccessTokenFromLocalStorage } from "./utils/accessTokenHandler";
 
 interface RouterElement {
@@ -30,13 +30,13 @@ const routerData: RouterElement[] = [
     withAuth: false,
     redirectPath: "/todo",
   },
-  // {
-  //   id: 2,
-  //   path: "/todo",
-  //   label: "Todo",
-  //   element: <Todo />,
-  //   withAuth: true,
-  // },
+  {
+    id: 2,
+    path: "/todo",
+    label: "Todo",
+    element: <Todo />,
+    withAuth: true,
+  },
 ];
 
 const routers = createBrowserRouter(
