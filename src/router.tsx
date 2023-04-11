@@ -44,21 +44,23 @@ const routers = createBrowserRouter(
     const hasAccessToken = !!getAccessTokenFromLocalStorage();
     const isProtectedRoute = !!router.withAuth;
 
-    if (isProtectedRoute) {
+    if (isProtectedRoute && !hasAccessToken) {
       return {
         path: router.path,
-        element: <Navigate to={hasAccessToken ? "/todo" : "/login"} />,
+        element: <Navigate to={"/login"} />,
+      };
+    }
+
+    if (hasAccessToken && !isProtectedRoute) {
+      return {
+        path: router.path,
+        element: <Navigate to={"/todo"} />,
       };
     }
 
     return {
       path: router.path,
-      element:
-        hasAccessToken && router.redirectPath ? (
-          <Navigate to={router.redirectPath} />
-        ) : (
-          router.element
-        ),
+      element: router.element,
     };
   })
 );
