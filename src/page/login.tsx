@@ -1,23 +1,47 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { postLogin } from "../api/auth/loginApi";
-import { useNavigate } from "react-router-dom";
+import { useRouter } from "../hooks/useRouter";
+import { getAccessTokenFromLocalStorage } from "../utils/accessTokenHandler";
 
 // import { saveRefreshTokenToLocalStorage } from "@/src/utils/refreshTokenHandler";
 // import { saveAccessTokenToLocalStorage } from "@/src/utils/accessTokenHandler";
 
 export default function Login() {
-  const navigate = useNavigate();
+  const { routeTo } = useRouter();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const isLoggedIn = async (): Promise<boolean> => {
+    const userProfileResponse = getAccessTokenFromLocalStorage();
+    return userProfileResponse !== null;
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    const isUserLoggedIn: boolean = await isLoggedIn();
+
+    if (isUserLoggedIn) {
+      routeTo("/todo");
+      return;
+    }
+
+    const loginResult = await postLogin({
+      email: email,
+      password: password,
+    });
+
+    if (loginResult === "fail") {
+      alert("로그인 실패, 이메일과 비밀번호를 다시 입력해주세요.");
+      return;
+    }
+    routeTo("/todo");
   };
 
   const handleSignup = () => {
-    navigate("/signup");
+    routeTo("/signup");
   };
 
   const isButtonDisabled = !email.includes("@") || !email.includes(".") || password.length < 8;
