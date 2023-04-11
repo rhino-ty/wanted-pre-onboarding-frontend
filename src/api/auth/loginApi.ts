@@ -9,14 +9,16 @@ export interface LoginRequest {
 type LoginResult = "success" | "fail";
 
 export const postLogin = async (args: LoginRequest): Promise<LoginResult> => {
-  const loginRes = await instance.post(`/auth/login`, args);
-  const { data: loginResponseData } = loginRes;
+  try {
+    const loginRes = await instance.post(`/auth/signin`, args);
 
-  saveAccessTokenToLocalStorage(loginResponseData.access_token);
+    saveAccessTokenToLocalStorage(loginRes.data.access_token);
 
-  if (loginResponseData.ok) {
-    return "success";
+    if (loginRes.status === 200) {
+      return "success";
+    }
+  } catch (error) {
+    console.log(error);
   }
-
   return "fail";
 };
