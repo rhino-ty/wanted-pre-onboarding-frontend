@@ -1,8 +1,7 @@
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import Login from "./page/login";
 import Signup from "./page/signup";
 import Todo from "./page/todo";
-import { getAccessTokenFromLocalStorage } from "./utils/accessTokenHandler";
 
 interface RouterElement {
   id: number; // 페이지 아이디 (반복문용 고유값)
@@ -15,7 +14,7 @@ interface RouterElement {
 const routerData: RouterElement[] = [
   {
     id: 0,
-    path: "/login",
+    path: "/",
     label: "Login",
     element: <Login />,
     withAuth: false,
@@ -36,30 +35,33 @@ const routerData: RouterElement[] = [
   },
 ];
 
-const routers = createBrowserRouter(
-  routerData.map((router) => {
-    const hasAccessToken = !!getAccessTokenFromLocalStorage();
-    const isProtectedRoute = router.withAuth;
+const routers = (
+  <Routes>
+    {routerData.map((route) => {
+      const hasAccessToken = localStorage.getItem("access_token") ? true : false;
+      const isProtectedRoute = route.withAuth;
 
-    if (hasAccessToken && (router.path === "/login" || router.path === "/signup")) {
-      return {
-        path: router.path,
-        element: <Navigate to={"/todo"} replace />,
-      };
-    }
+      if (hasAccessToken && (route.path === "/" || route.path === "/signup")) {
+        return (
+          <Route
+            key={route.id}
+            path={route.path}
+            element={<Navigate key={route.id} to="/todo" />}
+          />
+        );
+      }
 
-    if (!hasAccessToken && router.path === "/todo" && isProtectedRoute) {
-      return {
-        path: router.path,
-        element: <Navigate to={"/login"} replace />,
-      };
-    }
+      if (!hasAccessToken && isProtectedRoute && route.path === "/todo") {
+        return (
+          <Route key={route.id} path={route.path} element={<Navigate key={route.id} to="/" />} />
+        );
+      }
 
-    return {
-      path: router.path,
-      element: router.element,
-    };
-  })
+      return <Route key={route.id} path={route.path} element={route.element} />;
+    })}
+    {/* 404 리다이렉트 */}
+    <Route path="/*" element={<Navigate to="/" />} />
+  </Routes>
 );
 
 export default routers;

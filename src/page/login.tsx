@@ -1,7 +1,6 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { postLogin } from "../api/auth/loginApi";
 import { useRouter } from "../hooks/useRouter";
-import { getAccessTokenFromLocalStorage } from "../utils/accessTokenHandler";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
