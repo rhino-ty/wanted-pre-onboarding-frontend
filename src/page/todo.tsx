@@ -122,8 +122,8 @@ export default function TodoList() {
               <ListTitle>할 일이 없습니다.</ListTitle>
             )}
           </ListUl>
-          <TodoListContainer>
-            <ListTextField
+          <NewTodoContainer>
+            <NewTodoTextField
               data-testid="new-todo-input"
               type="text"
               value={newTodo}
@@ -132,10 +132,10 @@ export default function TodoList() {
               }}
               onKeyPress={handleNewTodoEnterPress}
             />
-            <ListButton data-testid="new-todo-add-button" onClick={handleNewTodoSubmit}>
+            <NewTodoButton data-testid="new-todo-add-button" onClick={handleNewTodoSubmit}>
               추가
-            </ListButton>
-          </TodoListContainer>
+            </NewTodoButton>
+          </NewTodoContainer>
         </Main>
       </TodoListContainer>
     </>
@@ -156,16 +156,25 @@ const Main = styled.main`
   align-items: center;
   justify-content: center;
   margin-top: 32px;
+  max-width: 600px;
+  width: 100%;
 `;
 
 const ListTitle = styled.h1`
-  font-size: 1rem;
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  text-decoration: ${({ checked }) => (checked ? "line-through" : "none")};
+
+  @media screen and (max-width: 480px) {
+    font-size: 1.2rem;
+  }
 `;
 
 const ListUl = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+  width: 100%;
 `;
 
 const ListLi = styled.li`
@@ -193,8 +202,34 @@ const ListCheckbox = styled.input`
 
 const ListTextField = styled(TextField)`
   margin-right: 16px;
+  width: 100%;
 `;
 
 const ListButton = styled(Button)`
   margin-right: 8px;
+`;
+
+const NewTodoContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  margin: 16px 0 32px 0;
+`;
+
+const NewTodoTextField = styled(TextField)`
+  margin-right: 16px;
+  width: 100%;
+
+  @media screen and (min-width: 481px) {
+    width: 75%;
+  }
+`;
+
+const NewTodoButton = styled(Button)`
+  width: 100%;
+
+  @media screen and (min-width: 481px) {
+    width: 25%;
+  }
 `;
