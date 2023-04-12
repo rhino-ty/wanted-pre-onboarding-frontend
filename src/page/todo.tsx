@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Todo, createTodo, getTodos } from "../api/todo/todoAPI";
+import { Todo, createTodo, getTodos, updateTodo } from "../api/todo/todoAPI";
 
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -23,6 +23,13 @@ export default function TodoList() {
     setNewTodo("");
   };
 
+  const handleTodoUpdate = async (id: number, todo: string, isCompleted: boolean) => {
+    const updatedTodo = await updateTodo(id, todo, isCompleted);
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo))
+    );
+  };
+
   return (
     <div>
       <h1>Todo List</h1>
@@ -31,7 +38,11 @@ export default function TodoList() {
           todos.map((todo) => (
             <li key={todo.id}>
               <label>
-                <input type="checkbox" checked={todo.isCompleted} />
+                <input
+                  type="checkbox"
+                  checked={todo.isCompleted}
+                  onChange={(e) => handleTodoUpdate(todo.id, todo.todo, e.target.checked)}
+                />
                 <span>{todo.todo}</span>
               </label>
             </li>
