@@ -22,6 +22,11 @@ export default function TodoList() {
     setTodos((prevTodos) => [...prevTodos, createdTodo]);
     setNewTodo("");
   };
+  const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      handleNewTodoSubmit();
+    }
+  };
 
   const handleTodoUpdate = async (id: number, todo: string, isCompleted: boolean) => {
     const updatedTodo = await updateTodo(id, todo, isCompleted);
@@ -115,6 +120,7 @@ export default function TodoList() {
           onChange={(e) => {
             setNewTodo(e.target.value);
           }}
+          onKeyUp={handleEnterPress}
         />
         <button data-testid="new-todo-add-button" onClick={handleNewTodoSubmit}>
           추가
