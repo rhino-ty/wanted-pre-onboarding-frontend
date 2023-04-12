@@ -28,6 +28,7 @@ export default function Login() {
     });
 
     if (loginResult === "fail") {
+      setPassword("");
       alert("로그인 실패, 이메일과 비밀번호를 다시 입력해주세요.");
       return;
     } else if (loginResult === "success") {
@@ -62,7 +63,7 @@ export default function Login() {
             fullWidth
             id="email"
             label="이메일"
-            name="email"
+            value={email}
             autoComplete="email"
             autoFocus
             onChange={(e) => setEmail(e.target.value)}
@@ -71,7 +72,7 @@ export default function Login() {
             margin="normal"
             required
             fullWidth
-            name="password"
+            value={password}
             label="비밀번호"
             type="password"
             id="password"
