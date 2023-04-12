@@ -35,27 +35,74 @@ export default function TodoList() {
     setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
   };
 
+  const handleEditMode = (id: number) => {
+    console.log(todos);
+
+    setTodos((prevTodos) =>
+      prevTodos.map((todo) =>
+        todo.id === id ? { ...todo, isEditMode: true } : { ...todo, isEditMode: false }
+      )
+    );
+  };
+
   return (
     <div>
       <h1>Todo List</h1>
       <ul>
         {todos.length !== 0 ? (
-          todos.map((todo) => (
-            <li key={todo.id}>
-              <label>
+          todos.map((todo) =>
+            todo.isEditMode ? (
+              <li key={todo.id}>
                 <input
-                  type="checkbox"
-                  checked={todo.isCompleted}
-                  onChange={(e) => handleTodoUpdate(todo.id, todo.todo, e.target.checked)}
+                  data-testid="modify-input"
+                  type="text"
+                  value={todo.todo}
+                  onChange={(e) =>
+                    setTodos((prevTodos) =>
+                      prevTodos.map((prevTodo) =>
+                        prevTodo.id === todo.id ? { ...prevTodo, todo: e.target.value } : prevTodo
+                      )
+                    )
+                  }
                 />
-                <span>{todo.todo}</span>
-              </label>
-              <button data-testid="modify-button">수정</button>
-              <button data-testid="delete-button" onClick={() => handleTodoDelete(todo.id)}>
-                삭제
-              </button>
-            </li>
-          ))
+                <button
+                  data-testid="submit-button"
+                  onClick={() => handleTodoUpdate(todo.id, todo.todo, todo.isCompleted)}
+                >
+                  제출
+                </button>
+                <button
+                  data-testid="cancel-button"
+                  onClick={() =>
+                    setTodos((prevTodos) =>
+                      prevTodos.map((prevTodo) =>
+                        prevTodo.id === todo.id ? { ...prevTodo, isEditMode: false } : prevTodo
+                      )
+                    )
+                  }
+                >
+                  취소
+                </button>
+              </li>
+            ) : (
+              <li key={todo.id}>
+                <label>
+                  <input
+                    type="checkbox"
+                    checked={todo.isCompleted}
+                    onChange={(e) => handleTodoUpdate(todo.id, todo.todo, e.target.checked)}
+                  />
+                  <span>{todo.todo}</span>
+                </label>
+                <button data-testid="modify-button" onClick={() => handleEditMode(todo.id)}>
+                  수정
+                </button>
+                <button data-testid="delete-button" onClick={() => handleTodoDelete(todo.id)}>
+                  삭제
+                </button>
+              </li>
+            )
+          )
         ) : (
           <span>할 일이 없습니다.</span>
         )}
