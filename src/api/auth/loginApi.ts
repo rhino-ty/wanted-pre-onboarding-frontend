@@ -21,4 +21,5 @@ export const postLogin = async (args: LoginRequest): Promise<LoginResult> => {
     console.log(error);
   }
   return "fail";
+  // error를 집어 넣고 catch를 사용해야 "fail"을 반환할 수 있음.. 그냥 if status하나로 안됨
 };
