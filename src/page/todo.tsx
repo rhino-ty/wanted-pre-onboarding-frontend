@@ -57,7 +57,7 @@ export default function TodoList() {
       <CssBaseline />
       <TodoListContainer>
         <Main>
-          <ListTitle>Todo List</ListTitle>
+          <ListH1Title>Todo List</ListH1Title>
           <ListUl>
             {todos.length !== 0 ? (
               todos.map((todo) =>
@@ -104,7 +104,7 @@ export default function TodoList() {
                         checked={todo.isCompleted}
                         onChange={(e) => handleTodoUpdate(todo.id, todo.todo, e.target.checked)}
                       />
-                      <ListTitle>{todo.todo}</ListTitle>
+                      <ListTitle isCompleted={todo.isCompleted}>{todo.todo}</ListTitle>
                     </ListCheckboxLabel>
                     <ListButton data-testid="modify-button" onClick={() => handleEditMode(todo.id)}>
                       수정
@@ -119,7 +119,7 @@ export default function TodoList() {
                 )
               )
             ) : (
-              <ListTitle>할 일이 없습니다.</ListTitle>
+              <Nothing>할 일이 없습니다.</Nothing>
             )}
           </ListUl>
           <NewTodoContainer>
@@ -155,19 +155,30 @@ const Main = styled.main`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-top: 32px;
+  padding: 32px 10px 0 10px;
   max-width: 600px;
   width: 100%;
 `;
 
-const ListTitle = styled.h1`
-  font-size: 1.5rem;
+const ListH1Title = styled.h1`
+  font-size: 2rem;
   margin-bottom: 16px;
-  text-decoration: ${({ checked }) => (checked ? "line-through" : "none")};
+`;
+
+const ListTitle = styled.span<{ isCompleted: boolean }>`
+  font-size: 1.2rem;
+  margin: 8px 0;
+  text-decoration: ${(props) => (props.isCompleted ? "line-through" : "none")};
+  color: ${(props) => (props.isCompleted ? "#999" : "inherit")};
 
   @media screen and (max-width: 480px) {
     font-size: 1.2rem;
   }
+`;
+
+const Nothing = styled.span`
+  font-size: 1.5rem;
+  margin-bottom: 16px;
 `;
 
 const ListUl = styled.ul`
@@ -207,6 +218,7 @@ const ListTextField = styled(TextField)`
 
 const ListButton = styled(Button)`
   margin-right: 8px;
+  height: 56px;
 `;
 
 const NewTodoContainer = styled.div`
@@ -218,7 +230,6 @@ const NewTodoContainer = styled.div`
 `;
 
 const NewTodoTextField = styled(TextField)`
-  margin-right: 16px;
   width: 100%;
 
   @media screen and (min-width: 481px) {
@@ -228,6 +239,7 @@ const NewTodoTextField = styled(TextField)`
 
 const NewTodoButton = styled(Button)`
   width: 100%;
+  height: 56px;
 
   @media screen and (min-width: 481px) {
     width: 25%;
