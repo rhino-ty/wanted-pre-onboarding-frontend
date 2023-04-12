@@ -1,6 +1,7 @@
 import instance from "../axiosModul";
 
 export interface Todo {
+  isEditMode: boolean;
   id: number;
   todo: string;
   isCompleted: boolean;
