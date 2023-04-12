@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Todo, createTodo, getTodos, updateTodo } from "../api/todo/todoAPI";
+import { Todo, createTodo, deleteTodo, getTodos, updateTodo } from "../api/todo/todoAPI";
 
 export default function TodoList() {
   const [todos, setTodos] = useState<Todo[]>([]);
@@ -30,6 +30,11 @@ export default function TodoList() {
     );
   };
 
+  const handleTodoDelete = async (id: number) => {
+    await deleteTodo(id);
+    setTodos((prevTodos) => prevTodos.filter((todo) => todo.id !== id));
+  };
+
   return (
     <div>
       <h1>Todo List</h1>
@@ -45,6 +50,10 @@ export default function TodoList() {
                 />
                 <span>{todo.todo}</span>
               </label>
+              <button data-testid="modify-button">수정</button>
+              <button data-testid="delete-button" onClick={() => handleTodoDelete(todo.id)}>
+                삭제
+              </button>
             </li>
           ))
         ) : (
