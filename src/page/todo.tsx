@@ -22,7 +22,7 @@ export default function TodoList() {
     setTodos((prevTodos) => [...prevTodos, createdTodo]);
     setNewTodo("");
   };
-  const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleNewTodoEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleNewTodoSubmit();
     }
@@ -41,8 +41,6 @@ export default function TodoList() {
   };
 
   const handleEditMode = (id: number) => {
-    console.log(todos);
-
     setTodos((prevTodos) =>
       prevTodos.map((todo) =>
         todo.id === id ? { ...todo, isEditMode: true } : { ...todo, isEditMode: false }
@@ -51,7 +49,7 @@ export default function TodoList() {
   };
 
   return (
-    <div>
+    <main>
       <h1>Todo List</h1>
       <ul>
         {todos.length !== 0 ? (
@@ -120,12 +118,12 @@ export default function TodoList() {
           onChange={(e) => {
             setNewTodo(e.target.value);
           }}
-          onKeyUp={handleEnterPress}
+          onKeyUp={handleNewTodoEnterPress}
         />
         <button data-testid="new-todo-add-button" onClick={handleNewTodoSubmit}>
           추가
         </button>
       </div>
-    </div>
+    </main>
   );
 }
